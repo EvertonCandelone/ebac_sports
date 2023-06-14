@@ -4,7 +4,6 @@ import Produtos from './containers/Produtos'
 
 import { GlobalStyle } from './styles'
 import { Provider } from 'react-redux'
-
 import { store } from './store'
 
 export type Produto = {
@@ -15,12 +14,13 @@ export type Produto = {
 }
 
 function App() {
+  const [produtos, setProdutos] = useState<Produto[]>([])
   const [favoritos, setFavoritos] = useState<Produto[]>([])
 
   useEffect(() => {
-    fetch('/api/ebac_sports')
+    fetch('https://fake-api-tau.vercel.app/api/ebac_sports')
       .then((res) => res.json())
-      .then((res) => Produtos(res))
+      .then((res) => setProdutos(res))
   }, [])
 
   function favoritar(produto: Produto) {
@@ -36,8 +36,15 @@ function App() {
     <Provider store={store}>
       <GlobalStyle />
       <div className="container">
-        <Header />
-        <Produtos favoritos={favoritos} favoritar={favoritar} />
+        <Header favoritos={favoritos} />
+        <Produtos
+          produtos={produtos}
+          favoritos={favoritos}
+          favoritar={favoritar}
+          adicionarAoCarrinho={function (): void {
+            throw new Error('Function not implemented.')
+          }}
+        />
       </div>
     </Provider>
   )
